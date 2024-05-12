@@ -1,6 +1,6 @@
-import { Framework } from './base'
 import { RewriteKeyContext, RewriteKeySource } from '~/core'
 import { LanguageId } from '~/utils'
+import { Framework } from './base'
 
 class SapphireI18nextFramework extends Framework {
   id = 'sapphire-i18next'
@@ -33,6 +33,7 @@ class SapphireI18nextFramework extends Framework {
   usageMatchRegex = [
     '\\b(?:(?:resolveKey)|(?:(?:send)|(?:reply)|(?:edit))Localized)\\(\\s*?[\\s\\S]*?\\s*?,\\s*?(?:{?\\s*?(?:[\\s\\S]*?,?)?\\s*?(?:keys:)?\\s*?\\[?[\'"`](.*?)[\'"`]\\]?\\s*?(?:,[\\s\\S]*?)?}?)\\)',
     '(?:i18n\\s*?\\.)?(?:(?:getT)|(?:format))\\([\\s\\S]*?(?:(?:\\)\\s*?\\()|(?:,))\\s*?[\'"`](.*?)[\'"`]',
+    't\\([\'"`](.*?)[\'"`]',
   ]
 
   derivedKeyRules = [
@@ -56,11 +57,9 @@ class SapphireI18nextFramework extends Framework {
   refactorTemplates(keypath: string) {
     return [
       `resolveKey(target, '${keypath}')`,
-      `replyLocalized(target, '${keypath}')`,
-      `editLocalized(target, '${keypath}')`,
-      `sendLocalized(target, '${keypath}')`,
       `container.i18n.getT(locale)('${keypath}')`,
       `container.i18n.format(locale, '${keypath}')`,
+      `t('${keypath}')`,
       keypath,
     ]
   }
